@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'article',
     'rest_framework',
     'django_filters',
+    'rest_framework_xml',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -106,7 +107,15 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
-    )
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework_xml.parsers.XMLParser',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework_xml.renderers.XMLRenderer',
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+      )
 
 }
 

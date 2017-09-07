@@ -10,8 +10,17 @@ from django.db.models import Count
 import django_filters
 from rest_framework.decorators import detail_route
 from rest_framework.viewsets import mixins, GenericViewSet
+from rest_framework.views import APIView
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser,
+    FileUploadParser,
+)
+from rest_framework.renderers import MultiPartRenderer
 from django_filters.rest_framework import DjangoFilterBackend
-
+from rest_framework_xml.parsers import XMLParser
+from rest_framework_xml.renderers import XMLRenderer
+from rest_framework.response import Response
 from article.models import Article
 
 
@@ -64,6 +73,26 @@ class ArticleViewSet(mixins.ListModelMixin,
 
     def get_queryset(self):
         return super(ArticleViewSet, self).get_queryset()
+
+
+class ImportXMLViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSaveSerializer
+    parser_classes   = (XMLParser, MultiPartParser)
+    renderer_classes = (XMLRenderer, MultiPartRenderer )
+
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            serializer.save(user=self.request.user)
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data)
+
+
+
 
 
 class UserArticleViewSet(viewsets.ModelViewSet):

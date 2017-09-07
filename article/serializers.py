@@ -3,9 +3,13 @@ from models import Article
 from collections import OrderedDict
 from rest_framework import serializers
 
+
+
 class ArticleSerializer(serializers.ModelSerializer):
+
     username = serializers.SerializerMethodField('_get_username')
     class Meta:
+
         model = Article
         fields = (
             'username',
@@ -22,6 +26,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 
 class ArticleSaveSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Article
         fields = (
@@ -33,6 +38,7 @@ class ArticleSaveSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     number_articles = serializers.SerializerMethodField('_get_number_articles')
     class Meta:
         model = User
